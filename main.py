@@ -1,38 +1,52 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+import logging
 
-#URLs
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
-response = requests.get("https://news.ycombinator.com/")
-yc_web_page = response.text
+class HackerNewsScraper:
+    """A scraper for Hacker News articles."""
 
-soup = BeautifulSoup(yc_web_page,"html.parser")
+    BASE_URL = "https://news.ycombinator.com/"
 
-articles_text = []
-articles_link = []
+    def __init__(self):
+        """Initialize the scraper with a requests session."""
+        self.session = requests.Session()
+        self.session.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
 
-articles = soup.find_all(name="span", class_="titleline")
-for article_tag in articles:
-    text = article_tag.get_text()
-    articles_text.append(text)
-    link = article_tag.find(name="a").get("href")
-    articles_link.append(link)
+    def get_top_articles(self):
+        """Fetch top articles from Hacker News."""
+        try:
+            response = self.session.get(self.BASE_URL)
+            response.raise_for_status()  # Raises a HTTPError if the response status code is 4XX/5XX
+            soup = BeautifulSoup(response.text, "html.parser")
+            return self._parse_articles(soup)
+        except requests.RequestException as e:
+            logging.error(f"Error fetching articles: {e}")
+            return []
 
-article_scores = [int(score.get_text().split()[0]) for score in soup.find_all(name="span", class_="score")]
+    def _parse_articles(self, soup):
+        """Parse articles from the BeautifulSoup object."""
+        articles = []
+        titles = soup.find_all("a", class_="titlelink")
+        scores = {score.parent.attrs["id"]: int(score.text.split()[0]) for score in soup.find_all("span", class_="score")}
 
-print(len(articles_text))
-print(len(articles_link))
-print(article_scores)
-print(len(article_scores))
+        for title in titles:
+            item_id = title.parent.parent.attrs["id"]
+            score = scores.get(f"score_{item_id}", 0)  # Default score to 0 if not found
+            articles.append({
+                "title": title.text,
+                "link": urljoin(self.BASE_URL, title.get("href")),
+                "score": score,
+            })
 
+        return articles
 
-hckr_news_list = {}
-for number in range(len(articles_text)):
+if __name__ == "__main__":
+    scraper = HackerNewsScraper()
+    top_articles = scraper.get_top_articles()
 
-    hckr_news_list[number] = {
-        "text": articles_text[number],
-        "link": articles_link[number],
-        "score": article_scores[number-1],
-    }
-
-print(hckr_news_list)
+    for article in top_articles:
+        print(f"Title: {article['title']}, Link: {article['link']}, Score: {article['score']}")
