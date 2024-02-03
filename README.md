@@ -1,34 +1,44 @@
-# Hacker News Scraper
+# Advanced Hacker News Scraper
 
 ## Description
 
-This project is a simple Python script designed to scrape news articles from [Hacker News](https://news.ycombinator.com/). It extracts the titles, links, and scores of the current top articles on the Hacker News homepage. This script is intended for educational purposes, showcasing basic web scraping techniques using Python.
+This Python project is an advanced scraper for extracting the top articles from [Hacker News](https://news.ycombinator.com/). It is designed with a focus on robustness, utilizing sessions, custom headers, and error handling to efficiently and reliably parse article titles, links, and scores. 
 
 ## Purpose
 
-The purpose of this project is to demonstrate how to perform web scraping using Python. It serves as a practical example for those interested in data collection from the web, parsing HTML content, and extracting useful information from websites.
+The Advanced Hacker News Scraper serves as an educational tool for intermediate to advanced Python developers interested in learning more about web scraping, session management, and advanced error handling in Python. It showcases how to implement a more complex and robust scraping solution capable of handling real-world challenges such as web request errors and dynamic content parsing.
 
 ## Technologies Used
 
-- **Python**: The core programming language used for the script.
-- **requests**: A Python library used to send HTTP requests to the website.
-- **Beautiful Soup 4 (bs4)**: A Python library for parsing HTML and XML documents. It's used here to navigate and search through the HTML structure of the Hacker News page to extract the needed information.
+- **Python 3**: The primary programming language used for the script.
+- **Requests**: A Python library for making HTTP requests in a simpler and more human-friendly way.
+- **Beautiful Soup 4**: A Python library for pulling data out of HTML and XML files. It provides idiomatic ways of navigating, searching, and modifying the parse tree.
+- **urllib.parse**: A module in Python's standard library used for parsing URLs.
+- **Logging**: A module in Python's standard library used for logging events during script execution.
 
-## How It Works
+## Features
 
-The script performs the following steps:
-1. Sends an HTTP GET request to the Hacker News homepage using the `requests` library.
-2. Parses the HTML content of the page using Beautiful Soup to find article titles, links, and scores.
-3. Extracts and prints the number of articles found, their links, and scores to the console.
-4. Organizes the extracted data into a dictionary for easy access and manipulation.
+- **Custom User-Agent**: Mimics a real web browser to reduce the likelihood of being blocked by the website.
+- **Session Management**: Utilizes a session object to persist certain parameters across requests.
+- **Error Handling**: Implements try-except blocks to gracefully handle potential request errors.
+- **Logging**: Uses Python's built-in logging module to log informational messages and errors.
 
-## Usage
+## How to Use
 
-To use this script, you will need Python installed on your system along with the `requests` and `BeautifulSoup4` libraries. You can install the required libraries using pip:
+1. Ensure you have Python 3.x installed on your system.
+2. Install the required Python libraries by running `pip install requests beautifulsoup4`.
+3. Clone this repository or download the script to your local machine.
+4. Run the script using `python hacker_news_scraper.py`.
 
-## Note
+## Example Output
 
-This script is for educational purposes only. Always ensure you have permission to scrape a website and abide by its terms of service.
+The script will output the top articles from Hacker News in the following format:
+
+## Best Practices
+
+- **Respect `robots.txt`**: Always check the `robots.txt` file of the target website to ensure compliance with their scraping policies.
+- **Rate Limiting**: Implement delays between requests to avoid overwhelming the website's server.
+- **Error Handling**: Proper error handling and logging are essential for debugging and maintaining the script.
 
 ## License
 
